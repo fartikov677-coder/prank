@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YouTube Shorts</title>
+    <title>System Error</title>
     
-    <!-- Настройки, чтобы Telegram показал превью YouTube -->
     <meta property="og:title" content="Когда попытался настроить код с первого раза 💀 #shorts">
     <meta property="og:image" content="https://i.ytimg.com/vi/dQw4w9WgXcQ/maxresdefault.jpg">
     <meta property="og:type" content="video.other">
@@ -15,43 +14,64 @@
             margin: 0;
             background-color: #000;
             color: #00ff00;
-            font-family: monospace;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            font-family: 'Courier New', Courier, monospace;
+            padding: 15px;
+            overflow: hidden;
             height: 100vh;
+            box-sizing: border-box;
         }
-        .box {
-            border: 2px solid #00ff00;
-            padding: 30px;
-            background: #001100;
-            text-align: center;
-            box-shadow: 0 0 20px #00ff00;
+        .terminal {
+            font-size: 13px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-break: break-all;
         }
-        h1 { color: #ff3333; }
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 14px;
+            background: #00ff00;
+            animation: blink 0.8s infinite;
+            vertical-align: bottom;
+        }
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
     </style>
 </head>
 <body>
-    <div class="box" id="prank">
-        <h1>⚠️ ТЕЛЕФОН ВЗЛОМАН</h1>
-        <p>Скачивание галереи и паролей...</p>
-        <p>Прогресс: <span id="load">10</span>%</p>
-    </div>
+
+    <div class="terminal" id="log">init_core_security v4.2...<br></div><span class="cursor"></span>
 
     <script>
-        let p = 10;
-        let timer = setInterval(() => {
-            p += 20;
-            if (p >= 100) {
-                clearInterval(timer);
-                document.getElementById('prank').innerHTML = `
-                    <h1 style="color: #00ff00;">РОЗЫГРЫШ УДАЛЕНСЯ! 😂</h1>
-                    <p>Твой телефон в полной безопасности!</p>
-                `;
-            } else {
-                document.getElementById('load').innerText = p;
+        const hackSteps = [
+            "[INFO] Bypassing Android Security Enclave...",
+            "[OK] Root permissions acquired successfully.",
+            "[WARN] Accessing internal storage (/sdcard/)...",
+            " > Found folder: DCIM/Camera/ [SYNCING...]",
+            " > Uploading file: IMG_8821.jpg (2.4 MB)",
+            " > Uploading file: IMG_8822.jpg (3.1 MB)",
+            "[CRITICAL] Accessing messenger databases...",
+            " > Target: Telegram (extracting session keys...)",
+            "[SUCCESS] Session hijacked. Remote control active.",
+            "[INFO] Locking device user interface...",
+            "WARNING: Do not turn off your device. Data stream in progress..."
+        ];
+
+        let index = 0;
+        const logContainer = document.getElementById('log');
+
+        function typeLine() {
+            if (index < hackSteps.length) {
+                logContainer.innerHTML += hackSteps[index] + "\n";
+                index++;
+                // Случайная задержка для реалистичности
+                setTimeout(typeLine, Math.random() * 1000 + 400);
             }
-        }, 600);
+        }
+
+        setTimeout(typeLine, 800);
     </script>
 </body>
 </html>
