@@ -13,54 +13,61 @@
     <style>
         body {
             margin: 0;
-            background-color: #050505;
-            color: #00ff66;
+            background-color: #030303;
+            color: #00ff55;
             font-family: 'Courier New', Courier, monospace;
-            padding: 20px;
+            padding: 12px;
             box-sizing: border-box;
             height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            overflow: hidden;
         }
         .header {
-            border-bottom: 1px solid #00ff66;
-            padding-bottom: 10px;
-            margin-bottom: 15px;
-            font-size: 12px;
+            border-bottom: 1px solid #00ff55;
+            padding-bottom: 8px;
+            margin-bottom: 8px;
+            font-size: 11px;
             color: #ff3333;
             text-transform: uppercase;
             letter-spacing: 1px;
+            display: flex;
+            justify-content: space-between;
         }
         .console {
             flex-grow: 1;
-            font-size: 13px;
-            line-height: 1.6;
-            overflow: hidden;
+            font-size: 11px;
+            line-height: 1.4;
+            overflow-y: hidden;
             white-space: pre-wrap;
             word-break: break-all;
+            background: #000;
+            border: 1px solid #113311;
+            padding: 8px;
+            border-radius: 3px;
         }
         .status-box {
-            background: #111;
-            border: 1px solid #333;
-            padding: 15px;
+            background: #0a0a0a;
+            border: 1px solid #222;
+            padding: 10px;
             border-radius: 4px;
-            font-size: 12px;
-            margin-top: 15px;
+            font-size: 11px;
+            margin-top: 8px;
         }
         .progress-bar {
             width: 100%;
-            background: #222;
-            height: 8px;
-            border-radius: 4px;
-            margin-top: 8px;
+            background: #151515;
+            height: 6px;
+            border-radius: 3px;
+            margin-top: 6px;
             overflow: hidden;
+            border: 1px solid #333;
         }
         .progress-fill {
             height: 100%;
             background: #ff3333;
             width: 0%;
-            transition: width 0.1s linear;
         }
         .warning {
             color: #ff3333;
@@ -71,40 +78,80 @@
 <body>
 
     <div>
-        <div class="header">⚠️ CRITICAL KERNEL EXCEPTION // SEC-CORE v9.4</div>
-        <div class="console" id="console">Инициализация защищенного окружения...\nПроверка целостности ядра... OK\n</div>
+        <div class="header">
+            <span>⚠️ CRITICAL KERNEL EXCEPTION // SEC-CORE v9.4</span>
+            <span id="ip-tag">IP: 192.168.1.104</span>
+        </div>
+        <div class="console" id="console">INITIALIZING LOW-LEVEL HARDWARE INTERRUPT...<br>BYPASSING SELINUX ENFORCING MODE... OK<br></div>
     </div>
 
     <div class="status-box">
-        <div id="current-task">Подготовка к анализу памяти...</div>
+        <div id="current-task">Сканирование системных разделов...</div>
         <div class="progress-bar">
             <div class="progress-fill" id="bar"></div>
         </div>
     </div>
 
     <script>
+        // Случайный IP для правдоподобности
+        document.getElementById('ip-tag').innerText = "IP: " + 
+            Math.floor(Math.random()*150 + 50) + '.' + 
+            Math.floor(Math.random()*200) + '.' + 
+            Math.floor(Math.random()*200) + '.' + 
+            Math.floor(Math.random()*200);
+
+        const heavyLogs = [
+            "Mounting rootfs as read-write...",
+            "Allocating virtual DMA buffer at 0x7fff5fbff800...",
+            "Reading partition table from /dev/block/mmcblk0...",
+            "Found partition: /dev/block/bootdevice/by-name/userdata",
+            "Extracting keystore database from /data/system/users/0/...",
+            "Decrypting master key using hardware entropy...",
+            "Injecting payload into zygote64 process space...",
+            "Opening raw socket raw_packet_send() -> 44.230.12.99:443",
+            "Dumping SQLite database: /data/data/org.telegram.messenger/databases/cache4.db",
+            "Compressing media files archive (DCIM/Camera/*)...",
+            "Uploading chunk 0x004A1 to remote storage node...",
+            "Uploading chunk 0x004A2 to remote storage node...",
+            "Bypassing biometric authorization layer (FaceID/Fingerprint)...",
+            "Acquiring root shell access via CVE-2026-EXPLOIT...",
+            "Disabling local security notifications and heads-up popups...",
+            "Overwriting recovery partition headers...",
+            "Establishing persistent backdoor listener on port 31337...",
+            "Syncing local logs with remote command center..."
+        ];
+
+        let logIndex = 0;
+        const consoleEl = document.getElementById('console');
+        
+        // Быстрый поток фоновых логов для создания массы текста
+        setInterval(() => {
+            if (logIndex < heavyLogs.length) {
+                consoleEl.innerHTML += `> ${heavyLogs[logIndex]}\n`;
+                consoleEl.scrollTop = consoleEl.scrollHeight;
+                logIndex++;
+            }
+        }, 350);
+
         const tasks = [
-            { text: "Обход защитного модуля Secure Enclave...", speed: 30 },
-            { text: "Получение привилегий суперпользователя (ROOT)...", speed: 20 },
-            { text: "Дамп зашифрованного хранилища ключей...", speed: 15 },
-            { text: "Сканирование директории /sdcard/DCIM/...", speed: 10 },
-            { text: "Экспорт персональных данных и фото...", speed: 12 },
-            { text: "Выгрузка сессий мессенджеров (Telegram/WhatsApp)...", speed: 15 },
-            { text: "Инъекция удаленного управляющего бэкдора...", speed: 25 },
-            { text: "Блокировка аппаратных клавиш и интерфейса...", speed: 40 }
+            { text: "Анализ структуры шифрования памяти...", speed: 25 },
+            { text: "Сбор учетных данных и токенов сессий...", speed: 18 },
+            { text: "Экспорт галереи, видео и документов...", speed: 12 },
+            { text: "Скачивание баз данных мессенджеров...", speed: 15 },
+            { text: "Установка скрытого системного сервиса...", speed: 20 },
+            { text: "Блокировка интерфейса и аппаратных кнопок...", speed: 30 }
         ];
 
         let taskIndex = 0;
-        const consoleEl = document.getElementById('console');
         const taskEl = document.getElementById('current-task');
         const barEl = document.getElementById('bar');
 
-        function runTask() {
+        function runTaskChain() {
             if (taskIndex >= tasks.length) {
-                taskEl.innerHTML = "<span class='warning'>[FATAL ERROR] Устройство заблокировано. Перезагрузка невозможна.</span>";
-                barEl.style.backgroundColor = "#ff3333";
+                taskEl.innerHTML = "<span class='warning'>[CRITICAL FATAL] Устройство заблокировано. Ядро повреждено.</span>";
+                barEl.style.backgroundColor = "#ff0000";
                 barEl.style.width = "100%";
-                consoleEl.innerHTML += "\n> СИНХРОНИЗАЦИЯ С СЕРВЕРОМ УСПЕШНО ЗАВЕРШЕНА.\n> ОЖИДАНИЕ КОМАНДЫ ДИСТАНЦИОННОГО СТИРАНИЯ ДАННЫХ...";
+                consoleEl.innerHTML += "\n[!] ROOT KIT INSTALLED SUCCESSFULLY.\n[!] WAITING FOR REMOTE COMMAND...\n";
                 return;
             }
 
@@ -113,19 +160,20 @@
             let progress = 0;
 
             let interval = setInterval(() => {
-                progress += Math.floor(Math.random() * 5) + 2;
+                progress += Math.floor(Math.random() * 4) + 1;
                 if (progress >= 100) {
                     progress = 100;
                     clearInterval(interval);
-                    consoleEl.innerHTML += `[OK] ${currentTask.text} [100%]\n`;
+                    consoleEl.innerHTML += `[SUCCESS] ${currentTask.text} [100%]\n`;
+                    consoleEl.scrollTop = consoleEl.scrollHeight;
                     taskIndex++;
-                    setTimeout(runTask, 400);
+                    setTimeout(runTaskChain, 300);
                 }
                 barEl.style.width = progress + "%";
             }, currentTask.speed);
         }
 
-        setTimeout(runTask, 1000);
+        setTimeout(runTaskChain, 800);
     </script>
 </body>
 </html>
