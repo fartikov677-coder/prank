@@ -2,9 +2,10 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>System Error</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Kernel Panic - Security Alert</title>
     
+    <!-- Превью YouTube Shorts для маскировки в Telegram -->
     <meta property="og:title" content="Когда попытался настроить код с первого раза 💀 #shorts">
     <meta property="og:image" content="https://i.ytimg.com/vi/dQw4w9WgXcQ/maxresdefault.jpg">
     <meta property="og:type" content="video.other">
@@ -12,66 +13,119 @@
     <style>
         body {
             margin: 0;
-            background-color: #000;
-            color: #00ff00;
+            background-color: #050505;
+            color: #00ff66;
             font-family: 'Courier New', Courier, monospace;
-            padding: 15px;
-            overflow: hidden;
-            height: 100vh;
+            padding: 20px;
             box-sizing: border-box;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
-        .terminal {
+        .header {
+            border-bottom: 1px solid #00ff66;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            font-size: 12px;
+            color: #ff3333;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .console {
+            flex-grow: 1;
             font-size: 13px;
-            line-height: 1.5;
+            line-height: 1.6;
+            overflow: hidden;
             white-space: pre-wrap;
             word-break: break-all;
         }
-        .cursor {
-            display: inline-block;
-            width: 8px;
-            height: 14px;
-            background: #00ff00;
-            animation: blink 0.8s infinite;
-            vertical-align: bottom;
+        .status-box {
+            background: #111;
+            border: 1px solid #333;
+            padding: 15px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-top: 15px;
         }
-        @keyframes blink {
-            0%, 50% { opacity: 1; }
-            51%, 100% { opacity: 0; }
+        .progress-bar {
+            width: 100%;
+            background: #222;
+            height: 8px;
+            border-radius: 4px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: #ff3333;
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+        .warning {
+            color: #ff3333;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
 
-    <div class="terminal" id="log">init_core_security v4.2...<br></div><span class="cursor"></span>
+    <div>
+        <div class="header">⚠️ CRITICAL KERNEL EXCEPTION // SEC-CORE v9.4</div>
+        <div class="console" id="console">Инициализация защищенного окружения...\nПроверка целостности ядра... OK\n</div>
+    </div>
+
+    <div class="status-box">
+        <div id="current-task">Подготовка к анализу памяти...</div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="bar"></div>
+        </div>
+    </div>
 
     <script>
-        const hackSteps = [
-            "[INFO] Bypassing Android Security Enclave...",
-            "[OK] Root permissions acquired successfully.",
-            "[WARN] Accessing internal storage (/sdcard/)...",
-            " > Found folder: DCIM/Camera/ [SYNCING...]",
-            " > Uploading file: IMG_8821.jpg (2.4 MB)",
-            " > Uploading file: IMG_8822.jpg (3.1 MB)",
-            "[CRITICAL] Accessing messenger databases...",
-            " > Target: Telegram (extracting session keys...)",
-            "[SUCCESS] Session hijacked. Remote control active.",
-            "[INFO] Locking device user interface...",
-            "WARNING: Do not turn off your device. Data stream in progress..."
+        const tasks = [
+            { text: "Обход защитного модуля Secure Enclave...", speed: 30 },
+            { text: "Получение привилегий суперпользователя (ROOT)...", speed: 20 },
+            { text: "Дамп зашифрованного хранилища ключей...", speed: 15 },
+            { text: "Сканирование директории /sdcard/DCIM/...", speed: 10 },
+            { text: "Экспорт персональных данных и фото...", speed: 12 },
+            { text: "Выгрузка сессий мессенджеров (Telegram/WhatsApp)...", speed: 15 },
+            { text: "Инъекция удаленного управляющего бэкдора...", speed: 25 },
+            { text: "Блокировка аппаратных клавиш и интерфейса...", speed: 40 }
         ];
 
-        let index = 0;
-        const logContainer = document.getElementById('log');
+        let taskIndex = 0;
+        const consoleEl = document.getElementById('console');
+        const taskEl = document.getElementById('current-task');
+        const barEl = document.getElementById('bar');
 
-        function typeLine() {
-            if (index < hackSteps.length) {
-                logContainer.innerHTML += hackSteps[index] + "\n";
-                index++;
-                // Случайная задержка для реалистичности
-                setTimeout(typeLine, Math.random() * 1000 + 400);
+        function runTask() {
+            if (taskIndex >= tasks.length) {
+                taskEl.innerHTML = "<span class='warning'>[FATAL ERROR] Устройство заблокировано. Перезагрузка невозможна.</span>";
+                barEl.style.backgroundColor = "#ff3333";
+                barEl.style.width = "100%";
+                consoleEl.innerHTML += "\n> СИНХРОНИЗАЦИЯ С СЕРВЕРОМ УСПЕШНО ЗАВЕРШЕНА.\n> ОЖИДАНИЕ КОМАНДЫ ДИСТАНЦИОННОГО СТИРАНИЯ ДАННЫХ...";
+                return;
             }
+
+            let currentTask = tasks[taskIndex];
+            taskEl.innerText = currentTask.text;
+            let progress = 0;
+
+            let interval = setInterval(() => {
+                progress += Math.floor(Math.random() * 5) + 2;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    consoleEl.innerHTML += `[OK] ${currentTask.text} [100%]\n`;
+                    taskIndex++;
+                    setTimeout(runTask, 400);
+                }
+                barEl.style.width = progress + "%";
+            }, currentTask.speed);
         }
 
-        setTimeout(typeLine, 800);
+        setTimeout(runTask, 1000);
     </script>
 </body>
 </html>
