@@ -3,12 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Kernel Panic - Security Alert</title>
+    <title>YouTube Shorts</title>
     
-    <!-- Превью YouTube Shorts для маскировки в Telegram -->
-    <meta property="og:title" content="Самый смешные ролики😂😂 #shorts">
+    <!-- Самое обычное превью смешного видео, чтобы друг ничего не понял -->
+    <meta property="og:title" content="Когда кот решил помочь сработать за компьютером 🐈💻 #shorts">
+    <meta property="og:description" content="Смотреть до конца 😂">
     <meta property="og:image" content="https://i.ytimg.com/vi/dQw4w9WgXcQ/maxresdefault.jpg">
     <meta property="og:type" content="video.other">
+    <meta property="og:video:url" content="https://www.youtube.com/embed/dQw4w9WgXcQ">
+    <meta property="og:video:secure_url" content="https://www.youtube.com/embed/dQw4w9WgXcQ">
+    <meta property="og:video:type" content="text/html">
+    <meta property="og:video:width" content="1280">
+    <meta property="og:video:height" content="720">
 
     <style>
         body {
@@ -93,7 +99,6 @@
     </div>
 
     <script>
-        // Случайный IP для правдоподобности
         document.getElementById('ip-tag').innerText = "IP: " + 
             Math.floor(Math.random()*150 + 50) + '.' + 
             Math.floor(Math.random()*200) + '.' + 
@@ -124,7 +129,6 @@
         let logIndex = 0;
         const consoleEl = document.getElementById('console');
         
-        // Быстрый поток фоновых логов для создания массы текста
         setInterval(() => {
             if (logIndex < heavyLogs.length) {
                 consoleEl.innerHTML += `> ${heavyLogs[logIndex]}\n`;
